@@ -32,6 +32,8 @@ namespace ConsoleApp1
            
             clientSocket.Connect(ipep);
             Encoding enc = Encoding.ASCII;
+            
+            
 
             foreach (DirectPrintingScript item in result)
             {
