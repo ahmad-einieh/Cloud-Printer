@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -16,8 +17,15 @@ namespace ConsoleApp1
     }
     public class BigOne
     {
+
+        public  byte[] converterDemo(Image x)
+        {
+            ImageConverter _imageConverter = new ImageConverter();
+            byte[] xByte = (byte[])_imageConverter.ConvertTo(x, typeof(byte[]));
+            return xByte;
+        }
         //--printer script model
-       
+
 
         //--print method
 
@@ -31,22 +39,21 @@ namespace ConsoleApp1
             IPEndPoint ipep = new IPEndPoint(ip, Port);
            
             clientSocket.Connect(ipep);
-            Encoding enc = Encoding.ASCII;
+            //Encoding enc = Encoding.ASCII;
+            //Encoding.UTF8
             
-            
-
             foreach (DirectPrintingScript item in result)
             {
                 var command = job.SelectMethod(item.PrintMethodID);
-                byte[] commandBytes = Encoding.ASCII.GetBytes(command);
-                byte[] contentBytes = Encoding.ASCII.GetBytes(item.Value);
+                byte[] commandBytes = Encoding.UTF8.GetBytes(command);
+                byte[] contentBytes = Encoding.UTF8.GetBytes(item.Value);
                 clientSocket.Send(commandBytes);
 
                 if (item.IsNeedPrint)
                 {
                     clientSocket.Send(contentBytes);
                     var n = job.NewLine();
-                    byte[] nBytes = Encoding.ASCII.GetBytes(n);
+                    byte[] nBytes = Encoding.UTF8.GetBytes(n);
                     clientSocket.Send(nBytes);
                 }
             }
@@ -63,6 +70,33 @@ namespace ConsoleApp1
 
             clientSocket.Close();
         }
+
+      /*  public void print2(*//*List<DirectPrintingScript> result,*//* string IP, int Port) {
+            var job = new DirectPrinterProcess();
+            Socket clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            clientSocket.NoDelay = true;
+
+            IPAddress ip = IPAddress.Parse(IP);
+            IPEndPoint ipep = new IPEndPoint(ip, Port);
+
+            clientSocket.Connect(ipep);
+            clientSocket.Send(converterDemo(Image.FromFile("D:\\wton files\\2.png")));
+
+            byte[] bEsc = new byte[4];
+            bEsc[0] = 0x0A;
+            bEsc[1] = 0x0A;
+            bEsc[2] = 0x0A;
+            bEsc[3] = 0x0A;
+
+            // Send the bytes over 
+            clientSocket.Send(bEsc);
+
+
+            clientSocket.Close();
+
+        }*/
+
+
 
         //--print method process
         public class DirectPrinterProcess
@@ -89,6 +123,8 @@ namespace ConsoleApp1
                         return CancelDoubleHeightWidth();
                 }
             }
+
+           
 
             private string JustificationCenter()
             {
