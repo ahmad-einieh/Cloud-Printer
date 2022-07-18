@@ -2,8 +2,9 @@
 using System.Net.Sockets;
 using System.Text;
 
-namespace ConsoleApp1
+namespace CloudPrinter
 {
+    // enum to select format of text
     enum Settings
     {
         JustificationCenter,
@@ -17,7 +18,6 @@ namespace ConsoleApp1
     {
         public void print(List<DirectPrintingScript> result, string IP, int Port)
         {
-            // it is 
             var job = new DirectPrinterProcess();
             // make socket to send info to printer
             Socket clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);

@@ -1,4 +1,4 @@
-﻿using ConsoleApp1;
+﻿using CloudPrinter;
 
 Printer printer = new Printer();
 
@@ -76,6 +76,3 @@ list.Add(new DirectPrintingScript
 
 // here static ip we add it to printer when config it
 printer.print(list, "172.20.6.58", 9100);
-
-
-// enum to select format of text

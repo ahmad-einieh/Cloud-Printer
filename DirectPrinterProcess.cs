@@ -1,4 +1,4 @@
-﻿namespace ConsoleApp1
+﻿namespace CloudPrinter
 {
     //class to make format
     public class DirectPrinterProcess
