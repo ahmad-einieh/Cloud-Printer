@@ -1,40 +1,11 @@
-﻿// ryan and ahmad work copyright
-
-using ConsoleApp1;
-
-
-// need add esc last of page
+﻿using ConsoleApp1;
 
 BigOne a = new BigOne();
 
-
+// this is print list
 List<DirectPrintingScript> list = new List<DirectPrintingScript>();
 
-/*list.Add(new DirectPrintingScript
-{
-    Value = "# order number #\n",
-    PrintMethodID = new List<int> { ((int)Settings.DoubleWidth), ((int)Settings.DoubleHeight), ((int)Settings.JustificationCenter) }
-    ,
-    IsNeedPrint = true
-}
-);
-
-list.Add(new DirectPrintingScript
-{
-    Value = "it is test order be careful 1\n",
-    PrintMethodID = new List<int> { ((int)Settings.JustificationLeft), ((int)Settings.CancelDoubleHeightWidth) },
-    IsNeedPrint = true
-}
-);
-
-list.Add(new DirectPrintingScript
-{
-    Value = "it is test order be careful 2\n",
-    PrintMethodID = new List<int> { ((int)Settings.JustificationLeft), ((int)Settings.CancelDoubleHeightWidth) },
-    IsNeedPrint = true
-}
-);*/
-
+// if you want use dynammic value you need handle string and count number of char to make good bill
 
 list.Add(new DirectPrintingScript
 {
@@ -114,13 +85,11 @@ list.Add(new DirectPrintingScript
     IsNeedPrint = true
 });
 
-
-
-
+// here static ip we add it to printer when config it
 a.print(list, "172.20.6.58", 9100);
 
-Console.WriteLine("done");
 
+// enum to select format of text
 enum Settings
 {
     JustificationCenter,

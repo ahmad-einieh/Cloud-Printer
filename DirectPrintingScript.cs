@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp1
 {
+
+    //model
     public class DirectPrintingScript
     {
         public string Value { get; set; }
@@ -20,59 +22,48 @@ namespace ConsoleApp1
     {
         public void print(List<DirectPrintingScript> result, string IP, int Port)
         {
+            // it is 
             var job = new DirectPrinterProcess();
+            // make socket to send info to printer
             Socket clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             clientSocket.NoDelay = true;
-
+            //handle ip and convert string ip to ipaddress
             IPAddress ip = IPAddress.Parse(IP);
             IPEndPoint ipep = new IPEndPoint(ip, Port);
-           
+
+            //connect with printer
             clientSocket.Connect(ipep);
-            
+
+            //loop to print all bill
             foreach (DirectPrintingScript item in result)
             {
-
-                //job.CancelDoubleHeightWidth();
-                foreach (int tempID in item.PrintMethodID) {                
+                //add format
+                foreach (int tempID in item.PrintMethodID)
+                {
                     clientSocket.Send(Encoding.UTF8.GetBytes(job.SelectMethod(tempID)));
                 }
 
-                //var command = job.SelectMethod(item.PrintMethodID);
-                //byte[] commandBytes = Encoding.UTF8.GetBytes(command);
-                //clientSocket.Send(commandBytes);
-
+                // here get info form list
                 byte[] contentBytes = Encoding.UTF8.GetBytes(item.Value);
-          
+
+                // print and add white space
                 if (item.IsNeedPrint)
                 {
-                    clientSocket.Send(contentBytes);               
-                    clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));               
+                    clientSocket.Send(contentBytes);
+                    clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));
                 }
             }
 
-            clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));
-            clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));
-            clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));
-            clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));
-            clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));
-            clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));
-            clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));
-            clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));
-            clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));
-            clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));
-            /*byte[] bEsc = new byte[6];
-            bEsc[0] = 0x0A;
-            bEsc[1] = 0x0A;
-            bEsc[2] = 0x0A;
-            bEsc[3] = 0x0A;
-            bEsc[4] = 0x0A;
-            clientSocket.Send(bEsc);*/
+            //for more space for cut bill
+            for (int i = 0; i < 10; i++) clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));
 
+            //close conncetion with socket
             clientSocket.Close();
         }
 
 
 
+        //class to make format
         public class DirectPrinterProcess
         {
             public string SelectMethod(int MethodID)
@@ -94,8 +85,8 @@ namespace ConsoleApp1
                 }
             }
 
-           
 
+            // all this is format
             private string JustificationCenter()
             {
                 return "" + (char)27 + (char)97 + (char)1;
@@ -126,10 +117,6 @@ namespace ConsoleApp1
                 return "" + "\n";
             }
 
-            public string Lines()
-            {
-                return "" + "\n\n\n\n\n\n\n\n\n";
-            }
         }
 
 
