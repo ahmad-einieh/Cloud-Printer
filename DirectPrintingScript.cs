@@ -55,6 +55,11 @@ namespace ConsoleApp1
             clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));
             clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));
             clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));
+            clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));
+            clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));
+            clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));
+            clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));
+            clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));
             /*byte[] bEsc = new byte[6];
             bEsc[0] = 0x0A;
             bEsc[1] = 0x0A;
