@@ -12,12 +12,12 @@ namespace ConsoleApp1
     public class DirectPrintingScript
     {
         public string Value { get; set; }
-        public int[] PrintMethodID { get; set; }
+        public List<int> PrintMethodID { get; set; }
         public bool IsNeedPrint { get; set; }
     }
+
     public class BigOne
     {
-
         public void print(List<DirectPrintingScript> result, string IP, int Port)
         {
             var job = new DirectPrinterProcess();
@@ -32,35 +32,36 @@ namespace ConsoleApp1
             foreach (DirectPrintingScript item in result)
             {
 
-                job.CancelDoubleHeightWidth();
+                //job.CancelDoubleHeightWidth();
                 foreach (int tempID in item.PrintMethodID) {                
-                    var command = job.SelectMethod(tempID);
-                    byte[] commandBytes = Encoding.UTF8.GetBytes(command);
-                    clientSocket.Send(commandBytes);
+                    clientSocket.Send(Encoding.UTF8.GetBytes(job.SelectMethod(tempID)));
                 }
 
                 //var command = job.SelectMethod(item.PrintMethodID);
                 //byte[] commandBytes = Encoding.UTF8.GetBytes(command);
                 //clientSocket.Send(commandBytes);
 
-
                 byte[] contentBytes = Encoding.UTF8.GetBytes(item.Value);
           
                 if (item.IsNeedPrint)
                 {
-                    clientSocket.Send(contentBytes);
-                    var n = job.NewLine();
-                    byte[] nBytes = Encoding.UTF8.GetBytes(n);
-                    clientSocket.Send(nBytes);
+                    clientSocket.Send(contentBytes);               
+                    clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));               
                 }
             }
 
-            byte[] bEsc = new byte[4];
+            clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));
+            clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));
+            clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));
+            clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));
+            clientSocket.Send(Encoding.UTF8.GetBytes(job.NewLine()));
+            /*byte[] bEsc = new byte[6];
             bEsc[0] = 0x0A;
             bEsc[1] = 0x0A;
             bEsc[2] = 0x0A;
             bEsc[3] = 0x0A;
-            clientSocket.Send(bEsc);
+            bEsc[4] = 0x0A;
+            clientSocket.Send(bEsc);*/
 
             clientSocket.Close();
         }
@@ -73,15 +74,15 @@ namespace ConsoleApp1
             {
                 switch (MethodID)
                 {
-                    case 1:
+                    case 0:
                         return JustificationCenter();
-                    case 2:
+                    case 1:
                         return JustificationLeft();
-                    case 3:
+                    case 2:
                         return DoubleHeight();
-                    case 4:
+                    case 3:
                         return DoubleWidth();
-                    case 5:
+                    case 4:
                         return CancelDoubleHeightWidth();
                     default:
                         return CancelDoubleHeightWidth();
@@ -118,6 +119,11 @@ namespace ConsoleApp1
             public string NewLine()
             {
                 return "" + "\n";
+            }
+
+            public string Lines()
+            {
+                return "" + "\n\n\n\n\n\n\n\n\n";
             }
         }
 
