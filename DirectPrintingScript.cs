@@ -12,22 +12,11 @@ namespace ConsoleApp1
     public class DirectPrintingScript
     {
         public string Value { get; set; }
-        public int PrintMethodID { get; set; }
+        public int[] PrintMethodID { get; set; }
         public bool IsNeedPrint { get; set; }
     }
     public class BigOne
     {
-
-        public  byte[] converterDemo(Image x)
-        {
-            ImageConverter _imageConverter = new ImageConverter();
-            byte[] xByte = (byte[])_imageConverter.ConvertTo(x, typeof(byte[]));
-            return xByte;
-        }
-        //--printer script model
-
-
-        //--print method
 
         public void print(List<DirectPrintingScript> result, string IP, int Port)
         {
@@ -39,16 +28,24 @@ namespace ConsoleApp1
             IPEndPoint ipep = new IPEndPoint(ip, Port);
            
             clientSocket.Connect(ipep);
-            //Encoding enc = Encoding.ASCII;
-            //Encoding.UTF8
             
             foreach (DirectPrintingScript item in result)
             {
-                var command = job.SelectMethod(item.PrintMethodID);
-                byte[] commandBytes = Encoding.UTF8.GetBytes(command);
-                byte[] contentBytes = Encoding.UTF8.GetBytes(item.Value);
-                clientSocket.Send(commandBytes);
 
+                job.CancelDoubleHeightWidth();
+                foreach (int tempID in item.PrintMethodID) {                
+                    var command = job.SelectMethod(tempID);
+                    byte[] commandBytes = Encoding.UTF8.GetBytes(command);
+                    clientSocket.Send(commandBytes);
+                }
+
+                //var command = job.SelectMethod(item.PrintMethodID);
+                //byte[] commandBytes = Encoding.UTF8.GetBytes(command);
+                //clientSocket.Send(commandBytes);
+
+
+                byte[] contentBytes = Encoding.UTF8.GetBytes(item.Value);
+          
                 if (item.IsNeedPrint)
                 {
                     clientSocket.Send(contentBytes);
@@ -58,47 +55,18 @@ namespace ConsoleApp1
                 }
             }
 
-            // Line feed hexadecimal values
             byte[] bEsc = new byte[4];
             bEsc[0] = 0x0A;
             bEsc[1] = 0x0A;
             bEsc[2] = 0x0A;
             bEsc[3] = 0x0A;
-
-            // Send the bytes over 
             clientSocket.Send(bEsc);
 
             clientSocket.Close();
         }
 
-      /*  public void print2(*//*List<DirectPrintingScript> result,*//* string IP, int Port) {
-            var job = new DirectPrinterProcess();
-            Socket clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            clientSocket.NoDelay = true;
-
-            IPAddress ip = IPAddress.Parse(IP);
-            IPEndPoint ipep = new IPEndPoint(ip, Port);
-
-            clientSocket.Connect(ipep);
-            clientSocket.Send(converterDemo(Image.FromFile("D:\\wton files\\2.png")));
-
-            byte[] bEsc = new byte[4];
-            bEsc[0] = 0x0A;
-            bEsc[1] = 0x0A;
-            bEsc[2] = 0x0A;
-            bEsc[3] = 0x0A;
-
-            // Send the bytes over 
-            clientSocket.Send(bEsc);
 
 
-            clientSocket.Close();
-
-        }*/
-
-
-
-        //--print method process
         public class DirectPrinterProcess
         {
             public string SelectMethod(int MethodID)
@@ -115,10 +83,6 @@ namespace ConsoleApp1
                         return DoubleWidth();
                     case 5:
                         return CancelDoubleHeightWidth();
-                    case 6:
-                        return SetColorRed();
-                    case 7:
-                        return SetColorBlack();
                     default:
                         return CancelDoubleHeightWidth();
                 }
@@ -146,19 +110,9 @@ namespace ConsoleApp1
                 return "" + (char)27 + (char)33 + (char)32;
             }
 
-            private string CancelDoubleHeightWidth()
+            public string CancelDoubleHeightWidth()
             {
                 return "" + (char)27 + (char)33 + (char)0;
-            }
-
-            private string SetColorRed()
-            {
-                return "" + (char)27 + (char)114 + (char)1;
-            }
-
-            private string SetColorBlack()
-            {
-                return "" + (char)27 + (char)114 + (char)0;
             }
 
             public string NewLine()
@@ -166,5 +120,8 @@ namespace ConsoleApp1
                 return "" + "\n";
             }
         }
+
+
+
     }
 }
