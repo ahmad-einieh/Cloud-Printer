@@ -1,0 +1,1 @@
+﻿print bill on foodics or sunmi cloud printer

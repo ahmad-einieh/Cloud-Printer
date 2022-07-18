@@ -86,7 +86,7 @@ namespace ConsoleApp1
             }
 
 
-            // all this is format
+            // all formats
             private string JustificationCenter()
             {
                 return "" + (char)27 + (char)97 + (char)1;
