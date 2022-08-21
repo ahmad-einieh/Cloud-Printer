@@ -25,7 +25,7 @@ namespace CloudPrinter
             //handle ip and convert string ip to ipaddress
             IPAddress ip = IPAddress.Parse(IP);
             IPEndPoint ipep = new IPEndPoint(ip, Port);
-
+            Console.WriteLine(ipep);
             //connect with printer
             clientSocket.Connect(ipep);
 
